@@ -21,7 +21,7 @@ contract Election {
         string name;
         uint voteCount;
     }
-    
+
     struct Admin {
         string username;
         string password;
@@ -68,18 +68,22 @@ contract Election {
         return (voters[msg.sender].userAddress);
     }
     
-    function login(string memory _phone_number,string memory _password) public view returns (string memory,string memory,string memory,string memory,string memory,string memory) {
+    function login(string memory _username, string memory _password) public view returns (string memory,string memory,string memory,string memory,string memory,string memory) {
         require(msg.sender == voters[msg.sender].userAddress, "Not allowed");
         
-        if ((bytes(_phone_number).length == bytes(voters[msg.sender].phone_number).length) && (bytes(_password).length == bytes(voters[msg.sender].password).length))
+        if ((bytes(_username).length == bytes(voters[msg.sender].username).length) && (bytes(_password).length == bytes(voters[msg.sender].password).length))
         {
             return (voters[msg.sender].username, voters[msg.sender].first_name, voters[msg.sender].last_name, voters[msg.sender].phone_number, voters[msg.sender].email, voters[msg.sender].password);
         }
     }
     
-    function getInfo() public view returns (string memory,string memory,string memory,string memory,string memory,string memory) {
+    function candInfo() public view returns (string memory,string memory,string memory) {
+        return (canditates[0].name, canditates[1].name, canditates[2].name);
+    }
+    
+    function getInfo() public view returns (string memory,string memory,string memory,string memory,string memory,address) {
         require(msg.sender == owner);
-        return (voters[msg.sender].username, voters[msg.sender].first_name, voters[msg.sender].last_name, voters[msg.sender].phone_number, voters[msg.sender].email, voters[msg.sender].password);
+        return (voters[msg.sender].username, voters[msg.sender].first_name, voters[msg.sender].last_name, voters[msg.sender].phone_number, voters[msg.sender].email, voters[msg.sender].userAddress);
     }
     
     function authorize(address voter) public {
@@ -105,6 +109,12 @@ contract Election {
         
         for (uint i=0; i < canditates.length; i++) {
             emit ElectionResult(canditates[i].name, canditates[i].voteCount);
+        }
+    }
+    
+    function result(uint n) public view returns(string memory, uint) {
+        for (uint i=n; i < canditates.length; i++) {
+            return (canditates[i].name, canditates[i].voteCount);
         }
     }
     
