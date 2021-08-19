@@ -82,7 +82,6 @@ contract Election {
     }
     
     function getInfo() public view returns (string memory,string memory,string memory,string memory,string memory,address) {
-        require(msg.sender == owner);
         return (voters[msg.sender].username, voters[msg.sender].first_name, voters[msg.sender].last_name, voters[msg.sender].phone_number, voters[msg.sender].email, voters[msg.sender].userAddress);
     }
     
