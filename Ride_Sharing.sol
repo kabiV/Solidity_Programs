@@ -1,8 +1,9 @@
 pragma solidity 0.4.26;
 
-contract Authentication {
+contract Rideether{
     uint256 public nbOfUsers;
     uint256 public nbOfDrivers;
+    uint256 public rate;
 
     struct User {
         string first_name;
@@ -14,6 +15,7 @@ contract Authentication {
         address userAddress;
     }
     
+    
     struct Driver {
         string driver_name;
         string vehical_name;
@@ -22,14 +24,18 @@ contract Authentication {
         string phone_number;
         string password;
         address driverAddress;
+        
     }
 
     mapping(address => User) private user;
     mapping(address => Driver) private driver;
+    string fromLoc;
+    string toLoc;
 
     constructor() public {
         nbOfUsers = 0;
         nbOfDrivers =0;
+        rate = 5;
     }
 
     function register(string memory _first_name,string memory _last_name,string memory _email,string memory _username,string memory _phone_number,string memory _password) public {
@@ -82,6 +88,27 @@ contract Authentication {
         {
             return (driver[msg.sender].username, driver[msg.sender].driver_name, driver[msg.sender].vehical_name, driver[msg.sender].vehical_number, driver[msg.sender].phone_number, driver[msg.sender].password);
         }
+    }
+    
+    function driverInfo() public view returns(string memory,string memory,string memory,string memory,string memory,address) {
+        return(driver[msg.sender].username, driver[msg.sender].driver_name, driver[msg.sender].vehical_name, driver[msg.sender].vehical_number, driver[msg.sender].phone_number, driver[msg.sender].driverAddress);
+    }
+    
+    function setLocation(string memory _fromLoc, string memory _toLoc) public {
+        fromLoc = _fromLoc;
+        toLoc = _toLoc;
+    }
+    
+    function getLocation() public view returns(string memory,string memory) {
+        return(fromLoc, toLoc);
+    }
+    
+    function setRate(uint256 _rate) public {
+        rate = _rate;
+    }
+    
+    function getRate() public view returns(uint256) {
+        return(rate);
     }
     
     function getUserAddress() public view returns (address) {
